@@ -7,7 +7,7 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
       template: "Downloading " + fileName
     }
         
-    dirEntrySuccess = (fileEntry) ->
+    getFileSuccess = (fileEntry) ->
       console.log "dir entry success"
       fileEntryToURL = fileEntry.toURL()
       fileEntry.remove()
@@ -25,13 +25,12 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
       
       ft.download encodedURL, fileEntryToURL, downloadSuccess, downloadFail, false, null
     
-    dirEntryFail = ->
+    getFileFail = ->
       console.log "dir entry failed"
     
     getDirectorySuccess = (dirEntry) ->
-      dirEntry.getFile fileName, {create: true, exclusive: false}, dirEntrySuccess, dirEntryFail
+      dirEntry.getFile fileName, {create: true, exclusive: false}, getFileSuccess, getFileFail
     
-    debugger
     mmFileSystem.getFsDirectory "mobileMeditationData", getDirectorySuccess
   
   $scope.imgFile = null
