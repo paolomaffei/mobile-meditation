@@ -1,15 +1,15 @@
 mod = angular.module "starter.controllers"
 
-mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading, tmMeditationData) ->
+mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading, mmMeditationData) ->
   media = null
   mediaTimer = null
   
-  meditationObject = tmMeditationData.getMeditationById($stateParams.meditationId)  
-  categoryObject = tmMeditationData.getCategoryById(meditationObject.parentId)
+  meditationObject = mmMeditationData.getMeditationById($stateParams.meditationId)  
+  categoryObject = mmMeditationData.getCategoryById(meditationObject.parentId)
   $scope.pageTitle = meditationObject.title
   $scope.categoryTitle = categoryObject.title
   
-  audioSrc = tmMeditationData.getResourceFolder() + meditationObject.id + ".mp3"
+  audioSrc = mmMeditationData.getResourceFolder() + meditationObject.id + ".mp3"
   $scope.description = categoryObject.description
   
   #media defaults
