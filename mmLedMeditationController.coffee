@@ -60,7 +60,6 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
       
       #get media URL from service (async)
       mmMeditationData.getMediaURL(meditationObject.id).then (mediaURL) ->
-        debugger
         media = new Media mediaURL, null, mediaError, changeMediaStatus
       
         #getCurrentPosition timer
