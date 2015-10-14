@@ -5,11 +5,13 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
   mediaTimer = null
   
   meditationObject = mmMeditationData.getMeditationById($stateParams.meditationId)  
-  categoryObject = mmMeditationData.getCategoryById(meditationObject.parentId)
   $scope.pageTitle = meditationObject.title
-  $scope.categoryTitle = categoryObject.title
   
-  $scope.description = categoryObject.description
+  #if there is a single parent, take categoryTitle and description from it
+  if meditationObject.parentId
+    categoryObject = mmMeditationData.getCategoryById(meditationObject.parentId)
+    $scope.categoryTitle = categoryObject.title
+    $scope.description = categoryObject.description
   
   #media defaults
   $scope.isPlaying = false
