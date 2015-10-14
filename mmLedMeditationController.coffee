@@ -9,7 +9,6 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
   $scope.pageTitle = meditationObject.title
   $scope.categoryTitle = categoryObject.title
   
-  audioSrc = mmMeditationData.getResourceFolder() + meditationObject.id + ".mp3"
   $scope.description = categoryObject.description
   
   #media defaults
@@ -41,10 +40,6 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
   if ionic.Platform.isWebView()
     ionic.Platform.ready ->
       
-      getMediaURL = (s) ->
-        if ionic.Platform.isAndroid() then return "/android_asset/www/" + s
-        else return s
-      
       mediaError = (e) ->
         console.log "Media Error!"
         console.log JSON.stringify e
@@ -61,20 +56,23 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
         
         console.log "media status change", s, $scope.isPlaying, media.getDuration()
       
-      media = new Media getMediaURL(audioSrc), null, mediaError, changeMediaStatus
+      #get media URL from service (async)
+      mmMeditationData.getMediaURL(meditationObject.id).then (mediaURL) ->
+        debugger
+        media = new Media mediaURL, null, mediaError, changeMediaStatus
       
-      #getCurrentPosition timer
-      successCb = (position) ->
-        if position > -1
-          $scope.position = parseInt(position)
-          $scope.$apply()
-      errorCb = (e) ->
-        console.log "Error getting position", e
-      
-      intervalFunction = ->
-        media.getCurrentPosition successCb, errorCb
-      
-      mediaTimer = setInterval intervalFunction, 500
+        #getCurrentPosition timer
+        successCb = (position) ->
+          if position > -1
+            $scope.position = parseInt(position)
+            $scope.$apply()
+        errorCb = (e) ->
+          console.log "Error getting position", e
+        
+        intervalFunction = ->
+          media.getCurrentPosition successCb, errorCb
+        
+        mediaTimer = setInterval intervalFunction, 500
       
   else
     console.log "running in web browser"
