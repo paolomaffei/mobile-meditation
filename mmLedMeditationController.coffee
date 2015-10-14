@@ -9,7 +9,7 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
   $scope.pageTitle = meditationObject.title
   $scope.categoryTitle = categoryObject.title
   
-  audioSrc = "resources/" + tmMeditationData.getResourceFolder() + "/" + meditationObject.id + ".mp3"
+  audioSrc = tmMeditationData.getResourceFolder() + meditationObject.id + ".mp3"
   $scope.description = categoryObject.description
   
   #media defaults
