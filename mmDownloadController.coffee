@@ -12,7 +12,7 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
       defer.resolve()
       
     $scope.downloadId = m.id
-    $scope.downloadProgress = 0
+    $scope.downloadProgress = "0%"
     
     mmDownloads.downloadFile(m.id + ".mp3", baseURL + m.id + ".mp3").then( (internalURL) ->
       m.downloaded = internalURL
@@ -29,7 +29,7 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
     
     return defer.promise #for use by $scope.downloadAll
   
-    
+  #scope 
   $scope.meditations = mmMeditationData.getMeditations()
   
   #downloads all files in sequence (one by one)
