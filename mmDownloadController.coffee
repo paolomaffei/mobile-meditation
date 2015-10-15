@@ -1,44 +1,35 @@
 mod = angular.module "starter.controllers"
 
-mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmMeditationData, mmFileSystem) ->
-    
-  downloadFile = (fileName, URL) ->
-    $ionicLoading.show {
-      template: "Downloading " + fileName
-    }
-        
-    getFileSuccess = (fileEntry) ->
-      console.log "dir entry success"
-      fileEntryToURL = fileEntry.toURL()
-      fileEntry.remove()
-      ft = new FileTransfer()
-      
-      encodedURL = encodeURI URL 
-      
-      downloadSuccess = (entry) ->
-        console.log "download success"
-        $ionicLoading.hide();
-        $scope.imgFile = entry.toURL();
-
-      downloadFail = (error) ->
-        console.log "download failed", error.source
-      
-      ft.download encodedURL, fileEntryToURL, downloadSuccess, downloadFail, false, null
-    
-    getFileFail = ->
-      console.log "dir entry failed"
-    
-    getDirectorySuccess = (dirEntry) ->
-      dirEntry.getFile fileName, {create: true, exclusive: false}, getFileSuccess, getFileFail
-    
-    mmFileSystem.getFsDirectory "mobileMeditationData", getDirectorySuccess
+mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmMeditationData, mmDownloads) ->
   
-  $scope.imgFile = null
+  baseURL = mmMeditationData.getBaseURL()
   
-  $scope.download = ->
-    baseURL = "http://www.freebuddhistmeditation.com/bw-mp3s/"
+  $scope.meditations = mmMeditationData.getMeditations()
+  
+  $scope.downloadAll = ->
+    _.each meditations, (m) ->
+      $scope.download m
+  
+  $scope.download = (m) ->
+    $scope.downloadId = m.id
+    $scope.downloadProgress = 0
     
-    medits = mmMeditationData.getMeditations()
+    mmDownloads.downloadFile(m.id + ".mp3", baseURL + m.id + ".mp3").then( (internalURL) ->
+      debugger
+      m.downloaded = internalURL
+      delete $scope.downloadId
+      delete $scope.downloadProgress
+      $scope.$apply()
+    ).catch( (e )->
+      debugger
+      console.log e
+      $scope.downloadProgress = "failed, try again"
+      $scope.$apply()
+    ).then(null, null, (progress) -> #notify cb
+      $scope.downloadProgress = progress
+      console.log progress
+    )
     
-    downloadFile(medits[0].id + ".mp3", baseURL + medits[0].id + ".mp3")
+  $scope.getDownloadedIcon = (meditation) ->
+    if meditation.downloaded then "icon icon-green ion-android-checkbox" else "icon icon-red ion-android-close"
     
