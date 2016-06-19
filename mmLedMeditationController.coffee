@@ -24,11 +24,18 @@ mod.controller "mmLedMeditationController", ($scope, $stateParams, $ionicLoading
     alert 'insomnia error', e
   
   $scope.play = ->
-    media.play() if media
-    window.plugins?.insomnia?.keepAwake insomniaSucc insomniaError
+    if media
+      media.play()
+      window.plugins?.insomnia?.keepAwake insomniaSucc insomniaError
+    else
+      console.log "play failed", meditationObject, media
+      
   $scope.pause = ->
-    media.pause() if media
-    window.plugins?.insomnia?.allowSleepAgain insomniaSucc insomniaError
+    if media
+      media.pause()
+      window.plugins?.insomnia?.allowSleepAgain insomniaSucc insomniaError
+    else
+      console.log "pause failed", meditationObject, media
   
   #clear up resources on leaving page
   $scope.$on "$ionicView.beforeLeave", ->
