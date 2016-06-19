@@ -22,6 +22,9 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
     ).catch( (e )->
       console.log e
       $scope.downloadProgress = "failed, try again"
+      
+      #re-enable download all button
+      $scope.disableDownloadAll = false
       defer.reject()
     ).then(null, null, (progress) -> #notify cb
       $scope.downloadProgress = progress + "%"
@@ -32,11 +35,20 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
   #scope 
   $scope.meditations = mmMeditationData.getMeditations()
   
+  #if at least one meditation has already been downloaded
+  #for m in $scope.meditations
+  #  if m.downloaded
+      #disable "download all"" button
+  #    $scope.disableDownloadAll = true;
+  
   #downloads all files in sequence (one by one)
   $scope.downloadAll = ->
     i = 0
     doDownload = ->
       download($scope.meditations[i]).then(downloadNext)
+    
+    #disable download all button
+    $scope.disableDownloadAll = true;
     
     #download one file, and when finished, download the next one
     downloadNext = ->
