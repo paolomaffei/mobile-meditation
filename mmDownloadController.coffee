@@ -1,6 +1,6 @@
 mod = angular.module "starter.controllers"
 
-mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmMeditationData, mmDownloads, $q) ->
+mod.controller "mmDownloadController", ($scope, $stateParams, $state, $ionicLoading, mmMeditationData, mmDownloads, $q) ->
   
   baseURL = mmMeditationData.getBaseURL()
   
@@ -56,8 +56,9 @@ mod.controller "mmDownloadController", ($scope, $stateParams, $ionicLoading, mmM
       #until there are indexes to download
       if i < $scope.meditations.length
         doDownload()
-      else
-        console.log "finished download everything"
+      else #this only happens when even the last file has been downloaded succesfully
+        console.log "finished downloading everything"
+        $state.go "app.categories"
       i++
       
     #start the downloads
