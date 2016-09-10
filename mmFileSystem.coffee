@@ -13,6 +13,6 @@ mod.factory "mmFileSystem", ->
       fileSystemFail = ->
         console.log "file system request failed"
     
-      window.requestFileSystem LocalFileSystem.PERSISTENT, 0, fileSystemSuccess, fileSystemFail
+      window.requestFileSystem LocalFileSystem.TEMPORARY, 0, fileSystemSuccess, fileSystemFail
     
   return factory
